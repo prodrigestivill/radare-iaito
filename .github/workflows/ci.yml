@@ -7,12 +7,14 @@ on:
   push:
     branches:
     - master
+    - test2
   pull_request:
     branches:
     - master
 
 jobs:
   acr-linux-r2git:
+    if: false
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
@@ -35,6 +37,7 @@ jobs:
     - name: packaging
       run: make -j -C dist/debian
   acr-linux:
+    if: false
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
@@ -96,6 +99,7 @@ jobs:
         name: iaito-x64.dmg
         path: dist/macos/iaito.dmg
   acr-macos-arm64:
+    if: false
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
@@ -128,6 +132,7 @@ jobs:
         name: iaito-arm64.dmg
         path: dist/macos/iaito.dmg
   meson:
+    if: false
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -171,6 +176,7 @@ jobs:
         meson setup build src
         ninja -C build -j4
   w64-meson:
+    if: false
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -216,7 +222,7 @@ jobs:
         path: iaito.zip
 
   check_release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: false
     outputs:
       is_release: ${{ steps.release.outputs.is }}
       tag_name: ${{ steps.release.outputs.tag }}
@@ -235,7 +241,7 @@ jobs:
         run: git describe --exact-match --tags ${{ github.sha }} | awk 'BEGIN{tag="-";r="no"}/^[0-9]+\.[0-9]+/{tag=$0;r="yes"};END{print "is="r;print "tag="tag}' >> ${GITHUB_OUTPUT}
         id: release
   release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.check_release.outputs.is_release == 'yes' }}
+    if: false
     needs:
       - check_release
     runs-on: ubuntu-latest
